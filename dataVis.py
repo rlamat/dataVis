@@ -1,12 +1,13 @@
 import dash
-from dash import dcc
-from dash import html
+from dash import dcc, html
 from dash.dependencies import Input, Output
 from data import getDatasFromTDFFinishers, getDatasFromTDFStages, getDatasFromTDFTours
 from data import graphNumberOfFinisher, graphAverageSpeed, graphTimeOfFirst, graphMultilineTimeOfFirst
 
 # Créer une instance de l'application Dash
 app = dash.Dash(__name__)
+app.title = 'Tour de France Data Visualization'
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
 dfFinishers = getDatasFromTDFFinishers()
 dfStages = getDatasFromTDFStages()
@@ -16,129 +17,124 @@ endYear = 2022
 compareStarters = False
 
 # Définir la disposition de l'application
-app.layout = html.Div(children=[
-    html.H1(children='Data Visualisation Application'),
-    
-    # Graphique pour le rapport finishers / starters
-    html.H2(children='Ratio Finishers / Starters by year graph'),
-    
-    html.Div(children='''
-        Select year start to display the number of finishers:
-    '''),
-    dcc.Input(id='start-year-input', type='number', value=1903, min=1903, max=2022),
-    
-    html.Div(children='''
-        Select year end to display the number of finishers:
-    '''),
-    dcc.Input(id='end-year-input', type='number', value=2021, min=1903, max=2022),
-    
-    html.Div(children='Show Finishers:'),
-    dcc.Checklist(
-        id='show-finishers-checklist',
-        options=[
-            {'label': 'Show Starters', 'value': 'show_starters'},
-        ],
-        value=[],
-        labelStyle={'display': 'inline-block'}
-    ),
-    
-    dcc.Graph(
-        id='finisher-graph'
-    ),
-    
-    # Graphique pour la vitesse moyenne
-    html.H2(children='Average speed by year graph'),
-    
-    html.Div(children='''
-        Select year start to display the number of finishers:
-    '''),
-    dcc.Input(id='start-year-input_avgspeed', type='number', value=1903, min=1903, max=2022),
-    
-    html.Div(children='''
-        Select year end to display the number of finishers:
-    '''),
-    dcc.Input(id='end-year-input_avgspeed', type='number', value=2021, min=1903, max=2022),
-    
-    dcc.Graph(
-        id='avgspeed-graph'
-    ),
-    
-    # Graphique pour le temps des premiers
-    html.H2(children='Compare time of first riders for a year bar graph'),
-    
-    html.Div(children='''
-        Select year to display :
-    '''),
-    dcc.Input(id='yearToDisplay-input', type='number', value=1903, min=1903, max=2022),
-    
-    html.Div(children='''
-        Select riders to display:
-    '''),
-
-    dcc.Dropdown(
-        id='timeOfFirsts-dropdown',
-        options=[
-            {'label': 'First Rider', 'value': 'first_rider'},
-            {'label': 'Second Rider', 'value': 'second_rider'},
-            {'label': 'Third Rider', 'value': 'third_rider'}
-        ],
-        value=['first_rider', 'second_rider', 'third_rider'],
-        multi=True
-    ),
-    
-    html.Div(children='''
-        Select time ladder:
-    '''),
-    
-    dcc.Dropdown(
-        id='time_Ladder-dropdown',
-        options=[
-            {'label': 'Hour', 'value': 'hour'},
-            {'label': 'Minute', 'value': 'minute'},
-            {'label': 'Second', 'value': 'second'}
-        ],
-        value='hour',
-        multi=False
-    ),
-
-    dcc.Graph(
-        id='timeOfFirsts-graph'
-    ),
-    
-    # Graphique pour l'écart entre les 3 premiers'
-    html.H2(children='Compare time of first riders by year multiline graph'),
-    
-    html.Div(children='''
-        Select year start to display:
-    '''),
-    dcc.Input(id='start_year-input', type='number', value=1903, min=1903, max=2022),
-    
-    html.Div(children='''
-        Select year end to display:
-    '''),
-    dcc.Input(id='end_year-input', type='number', value=2021, min=1903, max=2022),
-    
-    html.Div(children='''
-        Select time ladder:
-    '''),
-    
-    dcc.Dropdown(
-        id='timeLadder-dropdown',
-        options=[
-            {'label': 'Hour', 'value': 'hour'},
-            {'label': 'Minute', 'value': 'minute'},
-            {'label': 'Second', 'value': 'second'}
-        ],
-        value='hour',
-        multi=False
-    ),
-
-    dcc.Graph(
-        id='multilineFirsts-graph'
-    ),
-    
-    html.Button('Reset Zoom', id='reset-zoom-button', n_clicks=0)
-])
+app.layout = html.Div(
+    style={'margin': '0 auto', 'padding': '10px', 'maxWidth': '1000px', 'fontFamily': 'Arial, sans-serif'},
+    children=[
+        html.H1('Tour de France Data Visualization', style={'textAlign': 'center', 'marginBottom': '20px'}),
+        
+        html.Div([
+            html.H2('Ratio Finishers / Starters by Year', style={'textAlign': 'center'}),
+            html.Div([
+                html.Label('Select year start:', style={'marginRight': '10px'}),
+                dcc.Input(id='start-year-input', type='number', value=1903, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Select year end:', style={'marginRight': '10px'}),
+                dcc.Input(id='end-year-input', type='number', value=2021, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Show Starters:', style={'marginRight': '10px'}),
+                dcc.Checklist(
+                    id='show-finishers-checklist',
+                    options=[{'label': 'Show Starters', 'value': 'show_starters'}],
+                    value=[],
+                    labelStyle={'display': 'inline-block'}
+                )
+            ], style={'marginBottom': '20px'}),
+            
+            dcc.Graph(id='finisher-graph')
+        ], style={'border': '1px solid #ddd', 'borderRadius': '5px', 'padding': '10px', 'marginBottom': '20px'}),
+        
+        html.Div([
+            html.H2('Average Speed by Year', style={'textAlign': 'center'}),
+            html.Div([
+                html.Label('Select year start:', style={'marginRight': '10px'}),
+                dcc.Input(id='start-year-input_avgspeed', type='number', value=1903, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Select year end:', style={'marginRight': '10px'}),
+                dcc.Input(id='end-year-input_avgspeed', type='number', value=2021, min=1903, max=2022)
+            ], style={'marginBottom': '20px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            dcc.Graph(id='avgspeed-graph')
+        ], style={'border': '1px solid #ddd', 'borderRadius': '5px', 'padding': '10px', 'marginBottom': '20px'}),
+        
+        html.Div([
+            html.H2('Time of First Riders for a Year', style={'textAlign': 'center'}),
+            html.Div([
+                html.Label('Select year:', style={'marginRight': '10px'}),
+                dcc.Input(id='yearToDisplay-input', type='number', value=1903, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Select riders:', style={'marginRight': '10px'}),
+                dcc.Dropdown(
+                    id='timeOfFirsts-dropdown',
+                    options=[
+                        {'label': 'First Rider', 'value': 'first_rider'},
+                        {'label': 'Second Rider', 'value': 'second_rider'},
+                        {'label': 'Third Rider', 'value': 'third_rider'}
+                    ],
+                    value=['first_rider', 'second_rider', 'third_rider'],
+                    multi=True,
+                    style={'minWidth': '200px'}
+                )
+            ], style={'marginBottom': '10px'}),
+            
+            html.Div([
+                html.Label('Select time ladder:', style={'marginRight': '10px'}),
+                dcc.Dropdown(
+                    id='time_Ladder-dropdown',
+                    options=[
+                        {'label': 'Hour', 'value': 'hour'},
+                        {'label': 'Minute', 'value': 'minute'},
+                        {'label': 'Second', 'value': 'second'}
+                    ],
+                    value='hour',
+                    multi=False,
+                    style={'minWidth': '200px'}
+                )
+            ], style={'marginBottom': '20px'}),
+            
+            dcc.Graph(id='timeOfFirsts-graph')
+        ], style={'border': '1px solid #ddd', 'borderRadius': '5px', 'padding': '10px', 'marginBottom': '20px'}),
+        
+        html.Div([
+            html.H2('Compare Time of First Riders by Year', style={'textAlign': 'center'}),
+            html.Div([
+                html.Label('Select year start:', style={'marginRight': '10px'}),
+                dcc.Input(id='start_year-input', type='number', value=1903, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Select year end:', style={'marginRight': '10px'}),
+                dcc.Input(id='end_year-input', type='number', value=2021, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Select time ladder:', style={'marginRight': '10px'}),
+                dcc.Dropdown(
+                    id='timeLadder-dropdown',
+                    options=[
+                        {'label': 'Hour', 'value': 'hour'},
+                        {'label': 'Minute', 'value': 'minute'},
+                        {'label': 'Second', 'value': 'second'}
+                    ],
+                    value='hour',
+                    multi=False,
+                    style={'minWidth': '200px'}
+                )
+            ], style={'marginBottom': '20px'}),
+            
+            dcc.Graph(id='multilineFirsts-graph')
+        ], style={'border': '1px solid #ddd', 'borderRadius': '5px', 'padding': '10px', 'marginBottom': '20px'}),
+        
+        html.Button('Reset Zoom', id='reset-zoom-button', n_clicks=0, style={'display': 'block', 'margin': '0 auto'})
+    ]
+)
 
 
 @app.callback(
