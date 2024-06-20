@@ -76,10 +76,24 @@ def graphNumberOfFinisher(df, startYear, endYear, compareStarters):
     df['Year'] = df['Year'].astype(int)
     df = df.loc[df['Year'] >= startYear]
     df = df.loc[df['Year'] <= endYear]
+    df['StartersValid'] = df['Starters'].astype(int) - df['Finishers'].astype(int)
     if (compareStarters):
-        fig = px.bar(df, x='Year', y=['Finishers', 'Starters'], title='Number of starters and finishers by year')
+        fig = px.bar(df, x='Year', y=['Finishers', 'StartersValid'], title='Number of starters and finishers by year')
+        fig.update_yaxes(title_text='Total number of participants')
     else:
         fig = px.bar(df, x='Year', y='Finishers', title='Number of finishers by year')
+        fig.update_yaxes(title_text='Number of finishers')
+    return fig
+
+def graphTheAverageBetweenStartersAndFinishers(dfFinishers, startYear, endYear):
+    dfFinishers['Year'] = dfFinishers['Year'].astype(int)
+    dfFinishers = dfFinishers.loc[dfFinishers['Year'] >= startYear]
+    dfFinishers = dfFinishers.loc[dfFinishers['Year'] <= endYear]
+    dfFinishers['Finishers'] = dfFinishers['Finishers'].astype(int)
+    dfFinishers['Starters'] = dfFinishers['Starters'].astype(int)
+    dfFinishers['Average'] = dfFinishers['Finishers'] / dfFinishers['Starters']
+    fig = px.line(dfFinishers, x='Year', y='Average', title='Average between starters and finishers by year')
+    fig = fig.update_yaxes(title_text='Average (%)')
     return fig
 
 

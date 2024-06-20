@@ -2,7 +2,7 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
 from data import getDatasFromTDFFinishers, getDatasFromTDFStages, getDatasFromTDFTours
-from data import graphNumberOfFinisher, graphAverageSpeed, graphTimeOfFirst, graphMultilineTimeOfFirst
+from data import graphNumberOfFinisher, graphAverageSpeed, graphTimeOfFirst, graphMultilineTimeOfFirst, graphTheAverageBetweenStartersAndFinishers
 
 # Créer une instance de l'application Dash
 app = dash.Dash(__name__)
@@ -44,7 +44,8 @@ app.layout = html.Div(
                 )
             ], style={'marginBottom': '20px'}),
             
-            dcc.Graph(id='finisher-graph')
+            dcc.Graph(id='finisher-graph'),
+            dcc.Graph(id='average-between-starters-and-finishers')
         ], style={'border': '1px solid #ddd', 'borderRadius': '5px', 'padding': '10px', 'marginBottom': '20px'}),
         
         html.Div([
@@ -194,6 +195,15 @@ def update_multilineFirsts_graph(start_year, end_year, n_clicks, time_ladder):
         hovermode='closest',
         dragmode='zoom',
     )
+    return fig
+
+@app.callback(
+    Output('average-between-starters-and-finishers', 'figure'),
+    [Input('start-year-input', 'value'),
+     Input('end-year-input', 'value')]
+)
+def update_average_between_starters_and_finishers(start_year, end_year):
+    fig = graphTheAverageBetweenStartersAndFinishers(dfTours, start_year, end_year)
     return fig
 
 # Exécuter l'application
