@@ -3,7 +3,7 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
 from data import getDatasFromTDFFinishers, getDatasFromTDFStages, getDatasFromTDFTours
-from data import graphNumberOfFinisher, graphAverageSpeed, graphTimeOfFirst, graphMultilineTimeOfFirst
+from data import graphNumberOfFinisher, graphAverageSpeed, graphTimeOfFirst, graphMultilineTimeOfFirst, graphTheAverageBetweenStartersAndFinishers
 
 # Créer une instance de l'application Dash
 app = dash.Dash(__name__)
@@ -161,11 +161,20 @@ def update_multilineFirsts_graph(start_year, end_year, time_ladder):
     fig = graphMultilineTimeOfFirst(dfFinishers, start_year, end_year, time_ladder)
     fig.update_layout(
         title='Graphique interactif avec zoom',
-        xaxis_title='X Axis',
-        yaxis_title='Y Axis',
+        xaxis_title='Year',
+        yaxis_title='Time',
         hovermode='closest',
         dragmode='zoom',
     )
+    return fig
+
+@app.callback(
+    Output('average-between-starters-and-finishers', 'figure'),
+    [Input('start-year-input2', 'value'),
+     Input('end-year-input2', 'value')]
+)
+def update_average_between_starters_and_finishers(start_year, end_year):
+    fig = graphTheAverageBetweenStartersAndFinishers(dfTours, start_year, end_year)
     return fig
 
 # Ajout de styles et animations CSS
