@@ -6,6 +6,7 @@ from typing import List
 import numpy as np
 
 
+
 def getDatasFromTDFFinishers():
     file_path = 'tdf_finishers.csv'
     df = pd.read_csv(file_path, header=None)
