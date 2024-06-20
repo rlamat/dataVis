@@ -45,6 +45,17 @@ app.layout = html.Div(
             ], style={'marginBottom': '20px'}),
             
             dcc.Graph(id='finisher-graph'),
+            
+            html.Div([
+                html.Label('Select year start:', style={'marginRight': '10px'}),
+                dcc.Input(id='start-year-input2', type='number', value=1903, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Select year end:', style={'marginRight': '10px'}),
+                dcc.Input(id='end-year-input2', type='number', value=2021, min=1903, max=2022)
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
             dcc.Graph(id='average-between-starters-and-finishers')
         ], style={'border': '1px solid #ddd', 'borderRadius': '5px', 'padding': '10px', 'marginBottom': '20px'}),
         
@@ -59,6 +70,7 @@ app.layout = html.Div(
                 html.Label('Select year end:', style={'marginRight': '10px'}),
                 dcc.Input(id='end-year-input_avgspeed', type='number', value=2021, min=1903, max=2022)
             ], style={'marginBottom': '20px', 'display': 'flex', 'alignItems': 'center'}),
+            
             
             dcc.Graph(id='avgspeed-graph')
         ], style={'border': '1px solid #ddd', 'borderRadius': '5px', 'padding': '10px', 'marginBottom': '20px'}),
@@ -199,8 +211,8 @@ def update_multilineFirsts_graph(start_year, end_year, n_clicks, time_ladder):
 
 @app.callback(
     Output('average-between-starters-and-finishers', 'figure'),
-    [Input('start-year-input', 'value'),
-     Input('end-year-input', 'value')]
+    [Input('start-year-input2', 'value'),
+     Input('end-year-input2', 'value')]
 )
 def update_average_between_starters_and_finishers(start_year, end_year):
     fig = graphTheAverageBetweenStartersAndFinishers(dfTours, start_year, end_year)
