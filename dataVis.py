@@ -47,7 +47,20 @@ def render_content(tab):
                 options=[{'label': 'Show Starters', 'value': 'show_starters'}],
                 value=[], labelStyle={'display': 'inline-block', 'color': 'white'}
             ),
-            dcc.Graph(id='finisher-graph')
+            dcc.Graph(id='finisher-graph'),
+            
+            html.Div([
+                html.Label('Select year start:', style={'marginRight': '10px', 'color': 'white', 'marginBottom': '15px'}),
+                dcc.Input(id='start-year-input2', type='number', value=1903, min=1903, max=2022)  # Vérifiez cet ID
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            html.Div([
+                html.Label('Select year end:', style={'marginRight': '10px', 'color': 'white',, 'marginBottom': '15px'}),
+                dcc.Input(id='end-year-input2', type='number', value=2021, min=1903, max=2022)  # Vérifiez cet ID
+            ], style={'marginBottom': '10px', 'display': 'flex', 'alignItems': 'center'}),
+            
+            dcc.Graph(id='average-between-starters-and-finishers')
+            
         ], style={'padding': '20px', 'animation': 'fade-in 1s'}),
 
     elif tab == 'tab-2':
@@ -113,6 +126,7 @@ def render_content(tab):
             ),
             dcc.Graph(id='multilineFirsts-graph')
         ], style={'padding': '20px', 'animation': 'fade-in 1s'}),
+    
     else:
         return html.Div([
             html.H3('Tab content 1')
