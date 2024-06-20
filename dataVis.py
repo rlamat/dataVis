@@ -189,8 +189,8 @@ def update_multilineFirsts_graph(start_year, end_year, n_clicks, time_ladder):
     fig = graphMultilineTimeOfFirst(dfFinishers, start_year, end_year, time_ladder)
     fig.update_layout(
         title='Graphique interactif avec zoom',
-        xaxis_title='X Axis',
-        yaxis_title='Y Axis',
+        xaxis_title='Year',
+        yaxis_title='Time',
         hovermode='closest',
         dragmode='zoom',
     )
